@@ -69,9 +69,9 @@ describe 'Merchants API' do
       merchant = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to be_successful
-      expect(book[:data][:attributes]).to have_key(:name)
-      expect(book[:data][:attributes][:name]).to be_a(String)
-      expect(book[:data][:id]).to eq("#{@id}")
+      expect(merchant[:data][:attributes]).to have_key(:name)
+      expect(merchant[:data][:attributes][:name]).to be_a(String)
+      expect(merchant[:data][:id]).to eq("#{@id}")
     end
   end
   describe "GET merchant's items" do
