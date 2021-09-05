@@ -66,7 +66,7 @@ describe 'Merchants API' do
     end
     it 'returns an individual merchant' do
       get "/api/v1/merchants/#{@id}"
-      book = JSON.parse(response.body, symbolize_names: true)
+      merchant = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to be_successful
       expect(book[:data][:attributes]).to have_key(:name)
