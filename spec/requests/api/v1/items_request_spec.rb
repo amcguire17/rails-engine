@@ -161,4 +161,17 @@ describe 'Items API' do
       expect(message[:error].first).to eq("Merchant must exist")
     end
   end
+  describe "DELTE item" do
+    it 'can delete an item and not return any JSON' do
+      id = create(:item).id
+
+      expect(Item.count).to eq(1)
+
+      delete "/api/v1/items/#{id}"
+
+      expect(response).to be_successful
+      expect(Item.count).to eq(0)
+      expect{Item.find(id)}.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end
