@@ -189,4 +189,18 @@ describe 'Items API' do
       expect(item_merchant[:data][:attributes][:name]).to be_a(String)
     end
   end
+  describe 'GET find_all' do
+    it 'can find all items by name' do
+      item1 = create(:item, name: 'Hand Sanitizer')
+      item2 = create(:item, name: 'Hand Lotion')
+      item3 = create(:item, name: 'Soap')
+
+      get "/api/v1/items/find_all?name=hand"
+
+      expect(response).to be_successful
+      items = JSON.parse(response.body, symbolize_names: true)
+
+      expect(items[:data].count).to eq(2)
+    end
+  end
 end

@@ -28,6 +28,14 @@ class Api::V1::ItemsController < ApplicationController
   def destroy
     render json: Item.delete(params[:id])
   end
+  def find_all
+    if !params[:name].nil? && !params[:name].empty?
+      items = Item.search_all(params[:name])
+      render json: ItemSerializer.new(items)
+    else
+      render json: { error: 'Search not given' }, status: :bad_request
+    end
+  end
   private
   def item_params
     params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
