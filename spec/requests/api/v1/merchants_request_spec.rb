@@ -97,4 +97,19 @@ describe 'Merchants API' do
       end
     end
   end
+  describe 'GET find' do
+    it 'can find merchant by name' do
+      merchant1 = create(:merchant, name: 'Walmart')
+      merchant2 = create(:merchant, name: 'Kmart')
+      merchant3 = create(:merchant, name: 'Almart')
+
+      get "/api/v1/merchants/find?name=Mart"
+
+      expect(response).to be_successful
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchant.count).to eq(1)
+      expect(merchant[:data][:attributes][:name]).to eq("Almart")
+    end
+  end
 end

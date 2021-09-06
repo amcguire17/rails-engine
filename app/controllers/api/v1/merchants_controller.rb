@@ -9,4 +9,12 @@ class Api::V1::MerchantsController < ApplicationController
     merchant = Merchant.find(params[:id])
     render json: MerchantSerializer.new(merchant)
   end
+  def find_one
+    if !params[:name].nil? && !params[:name].empty?
+      merchant = Merchant.search(params[:name])
+      render json: MerchantSerializer.new(merchant)
+    else
+      render json: { error: 'Search not given' }, status: :bad_request
+    end
+  end
 end
