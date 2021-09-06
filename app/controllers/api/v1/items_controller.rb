@@ -17,4 +17,12 @@ class Api::V1::ItemsController < ApplicationController
       render json: { error: item.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  def update
+    item = Item.find(params[:id])
+    if item.update(item_params)
+      render json: ItemSerializer.new(item)
+    else
+      render json: { error: item.errors.full_messages }, status: :not_found
+    end
+  end
 end

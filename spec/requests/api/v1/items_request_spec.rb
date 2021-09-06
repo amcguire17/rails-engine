@@ -123,4 +123,42 @@ describe 'Items API' do
       expect(message[:error].first).to eq("Description can't be blank")
     end
   end
+  describe "PATCH item" do
+    it 'can upate an item' do
+      id = create(:item).id
+      previous_name = Item.last.name
+      previous_price = Item.last.unit_price
+      item_params = { name: 'Candle', unit_price: 1500.0 }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find_by(id: id)
+
+      expect(response).to be_successful
+      expect(item.name).to_not eq(previous_name)
+      expect(item.name).to eq('Candle')
+      expect(item.unit_price).to_not eq(previous_price)
+      expect(item.unit_price).to eq(1500.0)
+    end
+    it 'returns an error if item is not found' do
+      id = create(:item).id
+      item_params = { name: 'Candle', unit_price: 1500.0 }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/1500", headers: headers, params: JSON.generate({item: item_params})
+      message = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to_not be_successful
+      expect(message[:error]).to eq("Couldn't find Item with 'id'=1500")
+    end
+    it 'returns an error if merchant is not found' do
+      id = create(:item).id
+      item_params = { name: 'Candle', unit_price: 1500.0, merchant_id: 1500 }
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      message = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to_not be_successful
+      expect(message[:error].first).to eq("Merchant must exist")
+    end
+  end
 end
