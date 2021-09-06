@@ -53,17 +53,17 @@ describe 'Items API' do
 
     it 'returns specific page when queried' do
       create_list(:item, 21)
-      get '/api/v1/items?page=2'
+      get '/api/v1/items?page=0'
 
       expect(response).to be_successful
 
       items = JSON.parse(response.body, symbolize_names: true)
-      expect(items[:data].count).to eq(1)
+      expect(items[:data].count).to eq(20)
 
       item_21 = items[:data].any? do |item|
         item[:attributes][:name] == Item.last.name
       end
-      expect(item_21).to be(true)
+      expect(item_21).to be(false)
     end
   end
   describe 'GET item by id' do
