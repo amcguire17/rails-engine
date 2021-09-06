@@ -66,4 +66,25 @@ describe 'Items API' do
       expect(item_21).to be(true)
     end
   end
+  describe 'GET item by id' do
+    before :each do
+      @id = create(:item).id
+    end
+    it 'returns an individual merchant' do
+      get "/api/v1/items/#{@id}"
+      item = JSON.parse(response.body, symbolize_names: true)
+
+
+      expect(response).to be_successful
+      expect(item[:data][:attributes]).to have_key(:name)
+      expect(item[:data][:attributes][:name]).to be_a(String)
+      expect(item[:data][:attributes]).to have_key(:description)
+      expect(item[:data][:attributes][:description]).to be_a(String)
+      expect(item[:data][:attributes]).to have_key(:unit_price)
+      expect(item[:data][:attributes][:unit_price]).to be_a(Float)
+      expect(item[:data][:attributes]).to have_key(:merchant_id)
+      expect(item[:data][:attributes][:merchant_id]).to be_a(Integer)
+      expect(item[:data][:id]).to eq("#{@id}")
+    end
+  end
 end
