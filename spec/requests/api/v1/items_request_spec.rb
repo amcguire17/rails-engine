@@ -87,4 +87,40 @@ describe 'Items API' do
       expect(item[:data][:id]).to eq("#{@id}")
     end
   end
+  describe "POST item" do
+    it 'can create an item' do
+      create(:merchant, id: 14)
+      item_params = ({
+                  "name": 'Candle',
+                  "description": 'pine scented soy wax candle',
+                  "unit_price": 15.0,
+                  "merchant_id": 14
+                })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      created_item = Item.last
+
+      expect(response).to be_successful
+      expect(created_item.name).to eq(item_params[:name])
+      expect(created_item.description).to eq(item_params[:description])
+      expect(created_item.unit_price).to eq(item_params[:unit_price])
+      expect(created_item.merchant_id).to eq(item_params[:merchant_id])
+    end
+    it 'returns an error when param is missing' do
+      create(:merchant, id: 14)
+      item_params = ({
+                  "name": 'Candle',
+                  "unit_price": 15.0,
+                  "merchant_id": 14
+                })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+      message = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to_not be_successful
+      expect(message[:error].first).to eq("Description can't be blank")
+    end
+  end
 end
