@@ -63,6 +63,56 @@ describe 'Revenue API' do
       expect(merchant[:data][:attributes][:revenue]).to eq(145)
     end
   end
+  describe 'GET revenue dates' do
+    before :each do
+      merchants = create_list(:merchant, 3)
+      n = 1
+      merchants.map do |merchant|
+        create(:item, merchant: merchant)
+        create(:invoice, merchant: merchant, status: 'shipped', created_at: "2021-09-#{n}")
+        n += 1
+      end
+      create(:invoice_item, item: Item.first, invoice: Invoice.first, quantity: 2, unit_price: 10.00)
+      create(:invoice_item, item: Item.second, invoice: Invoice.second, quantity: 1, unit_price: 15.00)
+      create(:invoice_item, item: Item.third, invoice: Invoice.third, quantity: 3, unit_price: 20.00)
+      Invoice.all.each do |invoice|
+        create(:transaction, invoice: invoice)
+      end
+      @start_date = "2021-09-02"
+      @end_date = "2021-09-03"
+    end
+    it 'can return total revenue for time range' do
+      get "/api/v1/revenue?start_date=#{@start_date}&end_date=#{@end_date}"
+      revenue = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(revenue[:data][:attributes]).to have_key(:revenue)
+      expect(revenue[:data][:attributes][:revenue]).to be_a(Float)
+      expect(revenue[:data][:attributes][:revenue]).to eq(75)
+
+      get "/api/v1/revenue?start=#{@start_date}&end=#{@end_date}"
+      revenue = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(revenue[:data][:attributes]).to have_key(:revenue)
+      expect(revenue[:data][:attributes][:revenue]).to be_a(Float)
+      expect(revenue[:data][:attributes][:revenue]).to eq(75)
+    end
+    it 'returns an error if params are missing' do
+      get "/api/v1/revenue?start_date="
+      expect(response).to_not be_successful
+      expect(response.status).to be(400)
+    end
+    it 'returns an error if end date is before start date' do
+      get "/api/v1/revenue?start=#{@end_date}&end=#{@start_date}"
+      expect(response).to_not be_successful
+      expect(response.status).to be(400)
+
+      get "/api/v1/revenue?start_date=#{@end_date}&end_date=#{@start_date}"
+      expect(response).to_not be_successful
+      expect(response.status).to be(400)
+    end
+  end
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
     end

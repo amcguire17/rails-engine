@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get '/items/:id/merchant', to: 'item_merchant#show'
       get '/revenue/merchants', to: 'revenue#quantity_merchants'
       get '/revenue/merchants/:id', to: 'revenue#revenue_merchant'
+      get '/revenue', to: 'revenue#revenue_date'
     end
   end
 end
