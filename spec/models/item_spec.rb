@@ -44,5 +44,22 @@ describe Item do
         expect(Item.min_max_price(15.00, 20.00)).to eq(item3)
       end
     end
+    describe '.quantity_by_revenue' do
+      it 'can return specific amount of items by revenue' do
+        merchant = create(:merchant)
+        items = create_list(:item, 5, merchant: merchant)
+        create_list(:invoice, 5, merchant: merchant, status: 'shipped')
+        create(:invoice_item, item: Item.first, invoice: Invoice.first, quantity: 2, unit_price: 10.00)
+        create(:invoice_item, item: Item.second, invoice: Invoice.second, quantity: 1, unit_price: 15.00)
+        create(:invoice_item, item: Item.third, invoice: Invoice.third, quantity: 3, unit_price: 20.00)
+        create(:invoice_item, item: Item.fourth, invoice: Invoice.fourth, quantity: 1, unit_price: 13.00)
+        create(:invoice_item, item: Item.fifth, invoice: Invoice.fifth, quantity: 3, unit_price: 7.00)
+        Invoice.all.each do |invoice|
+          create(:transaction, invoice: invoice)
+        end
+
+        expect(Item.quantity_by_revenue(2)).to eq([items.third, items.fifth])
+      end
+    end
   end
 end

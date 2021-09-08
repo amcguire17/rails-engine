@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :items, only: [:index, :show, :create, :update, :destroy]
       get '/items/:id/merchant', to: 'item_merchant#show'
       get '/revenue/merchants', to: 'revenue#quantity_merchants'
+      get '/revenue/items', to: 'revenue#quantity_items'
       get '/revenue/merchants/:id', to: 'revenue#revenue_merchant'
       get '/revenue', to: 'revenue#revenue_date'
     end

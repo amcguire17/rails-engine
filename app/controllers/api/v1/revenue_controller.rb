@@ -34,4 +34,16 @@ class Api::V1::RevenueController < ApplicationController
       render_no_params
     end
   end
+  def quantity_items
+    if params_exist(params[:quantity])
+      if params[:quantity].to_i > 0
+        items = Item.quantity_by_revenue(params[:quantity].to_i)
+        render json: ItemRevenueSerializer.new(items)
+      else
+        render json: { error: 'param entered incorreclty'}, status: :bad_request
+      end
+    else
+      render_no_params
+    end
+  end
 end
