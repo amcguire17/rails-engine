@@ -38,4 +38,33 @@ describe 'Revenue API' do
       expect(response.status).to eq(400)
     end
   end
+  describe 'GET revenue/merchant/id' do
+    before :each do
+      @id = create(:merchant).id
+      create_list(:item, 3, merchant_id: @id)
+      create_list(:invoice, 3, merchant_id: @id, status: 'shipped')
+
+      create(:invoice_item, item: Item.first, invoice: Invoice.first, quantity: 2, unit_price: 10.00)
+      create(:invoice_item, item: Item.second, invoice: Invoice.first, quantity: 1, unit_price: 15.00)
+      create(:invoice_item, item: Item.third, invoice: Invoice.second, quantity: 3, unit_price: 20.00)
+      create(:invoice_item, item: Item.third, invoice: Invoice.third, quantity: 1, unit_price: 20.00)
+      create(:invoice_item, item: Item.first, invoice: Invoice.third, quantity: 3, unit_price: 10.00)
+      Invoice.all.each do |invoice|
+        create(:transaction, invoice: invoice)
+      end
+    end
+    it 'can return total revenue for a merchant' do
+      get "/api/v1/revenue/merchants/#{@id}"
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(merchant[:data][:attributes]).to have_key(:revenue)
+      expect(merchant[:data][:attributes][:revenue]).to be_a(Float)
+      expect(merchant[:data][:attributes][:revenue]).to eq(145)
+    end
+  end
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+    end
+  end
 end

@@ -44,5 +44,20 @@ describe Merchant do
         expect(Merchant.quantity_by_items(2)).to eq([merchants.second, merchants.third])
       end
     end
+    describe '.total_revenue' do
+      it 'can return total revenue for merchant' do
+        merchant = create(:merchant)
+        items = create_list(:item, 3, merchant: merchant)
+        invoices = create_list(:invoice, 3, merchant: merchant, status: 'shipped')
+        create(:invoice_item, item: items.first, invoice: invoices.first, quantity: 1, unit_price: 10.00)
+        create(:invoice_item, item: items.second, invoice: invoices.second, quantity: 3, unit_price: 15.00)
+        create(:invoice_item, item: items.third, invoice: invoices.third, quantity: 2, unit_price: 20.00)
+        invoices.each do |invoice|
+          create(:transaction, invoice: invoice)
+        end
+        
+        expect(Merchant.total_revenue(merchant.id).revenue).to eq(95.00)
+      end
+    end
   end
 end
