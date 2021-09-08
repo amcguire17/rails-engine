@@ -29,5 +29,21 @@ RSpec.describe Invoice do
         expect(Invoice.revenue_by_date(start_date, end_date)).to eq(75.00)
       end
     end
+    describe '.potential_revenue' do
+      it 'can return total potential revenue of invoices not shipped' do
+        create_list(:item, 3)
+        invoice1 = create(:invoice, status: 'shipped')
+        invoice2 = create(:invoice, status: 'pending')
+        invoice3 = create(:invoice, status: 'shipped')
+
+        create(:invoice_item, item: Item.first, invoice: invoice1, quantity: 2, unit_price: 10.00)
+        create(:invoice_item, item: Item.second, invoice: invoice2, quantity: 1, unit_price: 15.00)
+        create(:invoice_item, item: Item.third, invoice: invoice3, quantity: 3, unit_price: 20.00)
+        Invoice.all.each do |invoice|
+          create(:transaction, invoice: invoice)
+        end
+        expect(Invoice.potential_revenue(3)).to eq([invoice2])
+      end
+    end
   end
 end

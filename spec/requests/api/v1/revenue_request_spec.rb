@@ -153,6 +153,53 @@ describe 'Revenue API' do
       expect(response.status).to eq(400)
     end
   end
+  describe 'GET revenue/unshipped' do
+    before :each do
+      item = create(:item)
+      invoices_shipped = create_list(:invoice, 5, status: 'shipped')
+      invoices_not_shipped = create_list(:invoice, 10, status: 'pending')
+      invoices_shipped.each do |invoice|
+        create(:invoice_item, item: item, invoice: invoice)
+      end
+      invoices_not_shipped.each do |invoice|
+        create(:invoice_item, item: item, invoice: invoice)
+      end
+      Invoice.all.each do |invoice|
+        create(:transaction, invoice: invoice)
+      end
+    end
+    it 'returns potential revenue default quantity 10' do
+      get "/api/v1/revenue/unshipped"
+
+      expect(response).to be_successful
+      invoices = JSON.parse(response.body, symbolize_names: true)
+
+      expect(invoices[:data].count).to eq(10)
+      invoices[:data].each do |invoice|
+        expect(invoice[:attributes]).to have_key(:potential_revenue)
+        expect(invoice[:attributes][:potential_revenue]).to be_a(Float)
+      end
+    end
+    it 'returns potential revenue with quantity entered' do
+      get "/api/v1/revenue/unshipped?quantity=5"
+
+      expect(response).to be_successful
+      invoices = JSON.parse(response.body, symbolize_names: true)
+
+      expect(invoices[:data].count).to eq(5)
+      invoices[:data].each do |invoice|
+        expect(invoice[:attributes]).to have_key(:potential_revenue)
+        expect(invoice[:attributes][:potential_revenue]).to be_a(Float)
+      end
+    end
+    it 'returns error if params are entered incorrectly' do
+      get "/api/v1/revenue/unshipped?quantity="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/revenue/unshipped?quantity=kdj"
+
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
     end

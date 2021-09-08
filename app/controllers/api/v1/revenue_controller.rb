@@ -46,4 +46,13 @@ class Api::V1::RevenueController < ApplicationController
       render_no_params
     end
   end
+  def unshipped
+    quantity = params.fetch(:quantity,10).to_i
+    if quantity != 0
+      invoices = Invoice.potential_revenue(quantity)
+      render json: UnshippedOrderSerializer.new(invoices)
+    else
+      render json: { error: 'param entered incorreclty'}, status: :bad_request
+    end
+  end
 end

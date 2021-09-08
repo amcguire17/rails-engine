@@ -11,4 +11,13 @@ class Invoice < ApplicationRecord
     .where('invoices.created_at >= ? and invoices.created_at <= ?', start_date, end_date)
     .sum('invoice_items.quantity * invoice_items.unit_price')
   end
+  def self.potential_revenue(quantity)
+    joins(:transactions, :invoice_items)
+    .select('invoices.*, sum(invoice_items.quantity * invoice_items.unit_price) as potential_revenue')
+    .where('transactions.result = ?', 'success')
+    .where.not('invoices.status = ?', 'shipped')
+    .group('invoices.id')
+    .order('potential_revenue DESC')
+    .limit(quantity)
+  end
 end
