@@ -134,5 +134,29 @@ describe 'Merchants API' do
       expect(response.status).to eq(400)
     end
   end
+  describe 'GET find_all' do
+    it 'can find all merchants by name' do
+      merchant1 = create(:merchant, name: 'Walmart')
+      merchant2 = create(:merchant, name: 'Kmart')
+      merchant3 = create(:merchant, name: 'Almart')
+
+      get "/api/v1/merchants/find_all?name=mart"
+
+      expect(response).to be_successful
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchants[:data].count).to eq(3)
+    end
+    it 'returns error if params are incorrect' do
+      merchant1 = create(:merchant, name: 'Walmart')
+      merchant2 = create(:merchant, name: 'Kmart')
+      merchant3 = create(:merchant, name: 'Almart')
+
+      get "/api/v1/merchants/find_all?name="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+    end
+  end
   end
 end
