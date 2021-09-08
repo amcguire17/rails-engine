@@ -189,6 +189,115 @@ describe 'Items API' do
       expect(item_merchant[:data][:attributes][:name]).to be_a(String)
     end
   end
+  describe 'GET find' do
+    before :each do
+      item1 = create(:item, name: 'Hand Sanitizer', unit_price: 5.00)
+      item2 = create(:item, name: 'Hand Lotion', unit_price: 10.00)
+      item3 = create(:item, name: 'Soap', unit_price: 7.00)
+    end
+    it 'can find item by name or unit_price' do
+      get "/api/v1/items/find?name=hand"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:name]).to eq("Hand Lotion")
+
+      get "/api/v1/items/find?min_price=6"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:name]).to eq("Hand Lotion")
+
+      get "/api/v1/items/find?max_price=6"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:name]).to eq("Hand Sanitizer")
+
+      get "/api/v1/items/find?min_price=6&max_price=9"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item.count).to eq(1)
+      expect(item[:data][:attributes][:name]).to eq("Soap")
+    end
+    it 'returns empty hash if item is not found' do
+      get "/api/v1/items/find?name=gloves"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data]).to eq(nil)
+
+      get "/api/v1/items/find?min_price=20"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data]).to eq(nil)
+
+      get "/api/v1/items/find?max_price=2"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data]).to eq(nil)
+
+      get "/api/v1/items/find?min_price=15&max_price=20"
+
+      expect(response).to be_successful
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(item[:data]).to eq(nil)
+    end
+    it 'returns error if params are incorrect' do
+      item1 = create(:item, name: 'Hand Sanitizer', unit_price: 5.00)
+      item2 = create(:item, name: 'Hand Lotion', unit_price: 10.00)
+      item3 = create(:item, name: 'Soap', unit_price: 7.00)
+
+      get "/api/v1/items/find?name="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?name=soap&max_price=2"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?max_price="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?max_price=-5"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?min_price="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?min_price=-5"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      get "/api/v1/items/find?max_price=2&min_price=20"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+    end
+  end
   describe 'GET find_all' do
     it 'can find all items by name' do
       item1 = create(:item, name: 'Hand Sanitizer')

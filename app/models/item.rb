@@ -13,4 +13,7 @@ class Item < ApplicationRecord
   def self.max_price(max_params)
     where("unit_price < ?", max_params).order(:name).first
   end
+  def self.min_max_price(min_params, max_params)
+    where("unit_price > ? and unit_price < ?", min_params, max_params).order(:name).first
+  end
 end
