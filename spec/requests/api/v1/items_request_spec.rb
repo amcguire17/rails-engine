@@ -161,7 +161,7 @@ describe 'Items API' do
       expect(message[:error].first).to eq("Merchant must exist")
     end
   end
-  describe "DELTE item" do
+  describe "DELETE item" do
     it 'can delete an item and not return any JSON' do
       id = create(:item).id
 
@@ -310,6 +310,16 @@ describe 'Items API' do
       items = JSON.parse(response.body, symbolize_names: true)
 
       expect(items[:data].count).to eq(2)
+    end
+    it 'returns error if params are incorrect' do
+      item1 = create(:item, name: 'Hand Sanitizer')
+      item2 = create(:item, name: 'Hand Lotion')
+      item3 = create(:item, name: 'Soap')
+
+      get "/api/v1/items/find_all?name="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
     end
   end
 end

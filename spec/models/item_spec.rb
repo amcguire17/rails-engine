@@ -36,5 +36,13 @@ describe Item do
         expect(Item.max_price(15.00)).to eq(item2)
       end
     end
+    describe '.min_max_price' do
+      it 'can return all items by min and max price search' do
+        item1 = create(:item, unit_price: 25.00)
+        item2 = create(:item, unit_price: 10.00)
+        item3 = create(:item, unit_price: 17.50)
+        expect(Item.min_max_price(15.00, 20.00)).to eq(item3)
+      end
+    end
   end
 end

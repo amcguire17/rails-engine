@@ -111,5 +111,28 @@ describe 'Merchants API' do
       expect(merchant.count).to eq(1)
       expect(merchant[:data][:attributes][:name]).to eq("Almart")
     end
+    it 'returns empty hash if merchant is not found' do
+      merchant1 = create(:merchant, name: 'Walmart')
+      merchant2 = create(:merchant, name: 'Kmart')
+      merchant3 = create(:merchant, name: 'Almart')
+
+      get "/api/v1/merchants/find?name=target"
+
+      expect(response).to be_successful
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(merchant[:data]).to eq(nil)
+    end
+    it 'returns error if params are incorrect' do
+      merchant1 = create(:merchant, name: 'Walmart')
+      merchant2 = create(:merchant, name: 'Kmart')
+      merchant3 = create(:merchant, name: 'Almart')
+
+      get "/api/v1/merchants/find?name="
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+    end
+  end
   end
 end
