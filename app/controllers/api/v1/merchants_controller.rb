@@ -25,4 +25,12 @@ class Api::V1::MerchantsController < ApplicationController
       render json: { error: 'Search not given' }, status: :bad_request
     end
   end
+  def quantity_items
+    if params[:quantity]
+      merchants = Merchant.quantity_by_items(params[:quantity])
+      render json: ItemsSoldSerializer.new(merchants)
+    else
+      render json: { error: 'param not given' }, status: :bad_request
+    end
+  end
 end
