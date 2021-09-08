@@ -14,4 +14,7 @@ class ApplicationController < ActionController::API
   def get_per_page
     per_page = params.fetch(:per_page,20).to_i
   end
+  def params_exist(param)
+    !param.nil? && !param.empty?
+  end
 end

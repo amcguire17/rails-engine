@@ -29,7 +29,7 @@ class Api::V1::ItemsController < ApplicationController
     render json: Item.delete(params[:id])
   end
   def find_all
-    if !params[:name].nil? && !params[:name].empty?
+    if params_exist(params[:name])
       items = Item.search_all(params[:name])
       render json: ItemSerializer.new(items)
     else

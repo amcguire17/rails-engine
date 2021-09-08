@@ -10,7 +10,7 @@ class Api::V1::MerchantsController < ApplicationController
     render json: MerchantSerializer.new(merchant)
   end
   def find_one
-    if !params[:name].nil? && !params[:name].empty?
+    if params_exist(params[:name])
       merchant = Merchant.search(params[:name])
       render json: MerchantSerializer.new(merchant)
     else
