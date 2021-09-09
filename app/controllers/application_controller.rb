@@ -4,9 +4,16 @@ class ApplicationController < ActionController::API
   def render_not_found(exception)
     render json: { error: exception.message }, status: :not_found
   end
-  def render_no_params
-    render json: { error: 'param not given' }, status: :bad_request
+  def render_unprocessable(object)
+    render json: { error: object.errors.full_messages }, status: :unprocessable_entity
   end
+  def render_bad_request(message)
+    render json: { error: message }, status: :bad_request
+  end
+  def render_validation(object)
+    render json: { error: object.errors.full_messages }, status: :not_found
+  end
+
   def get_page
     if params[:page] == "0"
       page = params[:page].to_i

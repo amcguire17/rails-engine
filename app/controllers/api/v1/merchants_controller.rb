@@ -12,9 +12,9 @@ class Api::V1::MerchantsController < ApplicationController
   def find_one
     if params_exist(params[:name])
       merchant = Merchant.search(params[:name])
-      render json: MerchantSerializer.new(merchant)
+      render json: (merchant ? MerchantSerializer.new(merchant) : { data: {}} )
     else
-      render json: { error: 'param not given' }, status: :bad_request
+      render_bad_request('param not given')
     end
   end
   def find_all
@@ -22,7 +22,7 @@ class Api::V1::MerchantsController < ApplicationController
       merchants = Merchant.search_all(params[:name])
       render json: MerchantSerializer.new(merchants)
     else
-      render json: { error: 'Search not given' }, status: :bad_request
+      render_bad_request('Search not given')
     end
   end
   def quantity_items
@@ -30,7 +30,7 @@ class Api::V1::MerchantsController < ApplicationController
       merchants = Merchant.quantity_by_items(params[:quantity])
       render json: ItemsSoldSerializer.new(merchants)
     else
-      render json: { error: 'param not given' }, status: :bad_request
+      render_bad_request('param not given')
     end
   end
 end
