@@ -44,4 +44,9 @@ class Api::V1::RevenueController < ApplicationController
       render_bad_request('param entered incorrectly')
     end
   end
+  def weekly
+    id = nil
+    revenue = Invoice.revenue_by_week
+    render json: WeeklyRevenueSerializer.format_data(id, revenue)
+  end
 end

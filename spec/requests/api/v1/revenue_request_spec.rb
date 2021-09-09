@@ -187,4 +187,36 @@ describe 'Revenue API' do
       expect(response.status).to eq(400)
     end
   end
+  describe 'GET revenue weekly' do
+    it ' can return revenue by week' do
+      merchants = create_list(:merchant, 5)
+      n = 1
+      merchants.map do |merchant|
+        create(:item, merchant: merchant)
+        create(:invoice, merchant: merchant, status: 'shipped', created_at: "2021-09-#{n}")
+        n += 4
+      end
+      create(:invoice_item, item: Item.first, invoice: Invoice.first, quantity: 2, unit_price: 10.00)
+      create(:invoice_item, item: Item.second, invoice: Invoice.second, quantity: 1, unit_price: 15.00)
+      create(:invoice_item, item: Item.third, invoice: Invoice.third, quantity: 3, unit_price: 20.00)
+      create(:invoice_item, item: Item.fourth, invoice: Invoice.fourth, quantity: 2, unit_price: 5.00)
+      create(:invoice_item, item: Item.fifth, invoice: Invoice.fifth, quantity: 1, unit_price: 25.00)
+      Invoice.all.each do |invoice|
+        create(:transaction, invoice: invoice)
+      end
+
+      get "/api/v1/revenue/weekly"
+
+      expect(response).to be_successful
+      invoices = JSON.parse(response.body, symbolize_names: true)
+
+      expect(invoices[:data].count).to eq(3)
+      invoices[:data].each do |invoice|
+        expect(invoice[:attributes]).to have_key(:week)
+        expect(invoice[:attributes][:week]).to be_a(String)
+        expect(invoice[:attributes]).to have_key(:revenue)
+        expect(invoice[:attributes][:revenue]).to be_a(Float)
+      end
+    end
+  end
 end

@@ -20,4 +20,11 @@ class Invoice < ApplicationRecord
     .order('potential_revenue DESC')
     .limit(quantity)
   end
+  def self.revenue_by_week
+    joins(:transactions, :invoice_items)
+    .where('transactions.result = ? and invoices.status = ?', 'success', 'shipped')
+    .group("date_trunc('week', invoices.created_at)")
+    .order(Arel.sql("date_trunc('week', invoices.created_at)"))
+    .sum('invoice_items.quantity * invoice_items.unit_price')
+  end
 end

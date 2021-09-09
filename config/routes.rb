@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       get '/revenue/merchants/:id', to: 'revenue#revenue_merchant'
       get '/revenue', to: 'revenue#revenue_date'
       get '/revenue/unshipped', to: 'revenue#unshipped'
+      get '/revenue/weekly', to: 'revenue#weekly'
     end
   end
 end
