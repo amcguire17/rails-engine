@@ -25,10 +25,10 @@ describe 'Merchants API' do
       merchants = JSON.parse(response.body, symbolize_names: true)
       expect(merchants[:data].count).to eq(20)
 
-      merchant_21 = merchants[:data].any? do |merchant|
+      merchant21 = merchants[:data].any? do |merchant|
         merchant[:attributes][:name] == Merchant.last.name
       end
-      expect(merchant_21).to be(false)
+      expect(merchant21).to be(false)
     end
     it 'returns amount per page when queried' do
       create_list(:merchant, 6)
@@ -39,10 +39,10 @@ describe 'Merchants API' do
       merchants = JSON.parse(response.body, symbolize_names: true)
       expect(merchants[:data].count).to eq(5)
 
-      merchant_6 = merchants[:data].any? do |merchant|
+      merchant6 = merchants[:data].any? do |merchant|
         merchant[:attributes][:name] == Merchant.last.name
       end
-      expect(merchant_6).to be(false)
+      expect(merchant6).to be(false)
     end
 
     it 'returns specific page when queried' do
@@ -54,10 +54,10 @@ describe 'Merchants API' do
       merchants = JSON.parse(response.body, symbolize_names: true)
       expect(merchants[:data].count).to eq(1)
 
-      merchant_21 = merchants[:data].any? do |merchant|
+      merchant21 = merchants[:data].any? do |merchant|
         merchant[:attributes][:name] == Merchant.last.name
       end
-      expect(merchant_21).to be(true)
+      expect(merchant21).to be(true)
     end
   end
   describe 'GET merchant by id' do
@@ -71,7 +71,7 @@ describe 'Merchants API' do
       expect(response).to be_successful
       expect(merchant[:data][:attributes]).to have_key(:name)
       expect(merchant[:data][:attributes][:name]).to be_a(String)
-      expect(merchant[:data][:id]).to eq("#{@id}")
+      expect(merchant[:data][:id]).to eq(@id.to_s)
     end
   end
   describe "GET merchant's items" do
@@ -99,24 +99,24 @@ describe 'Merchants API' do
   end
   describe 'GET find' do
     it 'can find merchant by name' do
-      merchant1 = create(:merchant, name: 'Walmart')
-      merchant2 = create(:merchant, name: 'Kmart')
-      merchant3 = create(:merchant, name: 'Almart')
+      create(:merchant, name: 'Walmart')
+      create(:merchant, name: 'Kmart')
+      create(:merchant, name: 'Almart')
 
-      get "/api/v1/merchants/find?name=Mart"
+      get '/api/v1/merchants/find?name=Mart'
 
       expect(response).to be_successful
       merchant = JSON.parse(response.body, symbolize_names: true)
 
       expect(merchant.count).to eq(1)
-      expect(merchant[:data][:attributes][:name]).to eq("Almart")
+      expect(merchant[:data][:attributes][:name]).to eq('Almart')
     end
     it 'returns empty hash if merchant is not found' do
-      merchant1 = create(:merchant, name: 'Walmart')
-      merchant2 = create(:merchant, name: 'Kmart')
-      merchant3 = create(:merchant, name: 'Almart')
+      create(:merchant, name: 'Walmart')
+      create(:merchant, name: 'Kmart')
+      create(:merchant, name: 'Almart')
 
-      get "/api/v1/merchants/find?name=target"
+      get '/api/v1/merchants/find?name=target'
 
       expect(response).to be_successful
       merchant = JSON.parse(response.body, symbolize_names: true)
@@ -124,11 +124,11 @@ describe 'Merchants API' do
       expect(merchant[:data]).to eq({})
     end
     it 'returns error if params are incorrect' do
-      merchant1 = create(:merchant, name: 'Walmart')
-      merchant2 = create(:merchant, name: 'Kmart')
-      merchant3 = create(:merchant, name: 'Almart')
+      create(:merchant, name: 'Walmart')
+      create(:merchant, name: 'Kmart')
+      create(:merchant, name: 'Almart')
 
-      get "/api/v1/merchants/find?name="
+      get '/api/v1/merchants/find?name='
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
@@ -136,11 +136,11 @@ describe 'Merchants API' do
   end
   describe 'GET find_all' do
     it 'can find all merchants by name' do
-      merchant1 = create(:merchant, name: 'Walmart')
-      merchant2 = create(:merchant, name: 'Kmart')
-      merchant3 = create(:merchant, name: 'Almart')
+      create(:merchant, name: 'Walmart')
+      create(:merchant, name: 'Kmart')
+      create(:merchant, name: 'Almart')
 
-      get "/api/v1/merchants/find_all?name=mart"
+      get '/api/v1/merchants/find_all?name=mart'
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: true)
@@ -148,11 +148,11 @@ describe 'Merchants API' do
       expect(merchants[:data].count).to eq(3)
     end
     it 'returns error if params are incorrect' do
-      merchant1 = create(:merchant, name: 'Walmart')
-      merchant2 = create(:merchant, name: 'Kmart')
-      merchant3 = create(:merchant, name: 'Almart')
+      create(:merchant, name: 'Walmart')
+      create(:merchant, name: 'Kmart')
+      create(:merchant, name: 'Almart')
 
-      get "/api/v1/merchants/find_all?name="
+      get '/api/v1/merchants/find_all?name='
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
@@ -174,7 +174,7 @@ describe 'Merchants API' do
         create(:transaction, invoice: invoice)
       end
 
-      get "/api/v1/merchants/most_items?quantity=2"
+      get '/api/v1/merchants/most_items?quantity=2'
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: true)
@@ -188,7 +188,7 @@ describe 'Merchants API' do
       end
     end
     it 'returns an error if params are incorrect' do
-      get "/api/v1/merchants/most_items?quantity"
+      get '/api/v1/merchants/most_items?quantity'
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)

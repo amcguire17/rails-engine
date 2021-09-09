@@ -18,7 +18,7 @@ describe 'Revenue API' do
       end
     end
     it 'can return quantity of merchants by revenue' do
-      get "/api/v1/revenue/merchants?quantity=3"
+      get '/api/v1/revenue/merchants?quantity=3'
 
       expect(response).to be_successful
       merchants = JSON.parse(response.body, symbolize_names: true)
@@ -32,7 +32,7 @@ describe 'Revenue API' do
       end
     end
     it 'can return error if params are incorrect' do
-      get "/api/v1/revenue/merchants"
+      get '/api/v1/revenue/merchants'
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
@@ -78,8 +78,8 @@ describe 'Revenue API' do
       Invoice.all.each do |invoice|
         create(:transaction, invoice: invoice)
       end
-      @start_date = "2021-09-02"
-      @end_date = "2021-09-03"
+      @start_date = '2021-09-02'
+      @end_date = '2021-09-03'
     end
     it 'can return total revenue for time range' do
       get "/api/v1/revenue?start=#{@start_date}&end=#{@end_date}"
@@ -91,7 +91,7 @@ describe 'Revenue API' do
       expect(revenue[:data][:attributes][:revenue]).to eq(75)
     end
     it 'returns an error if params are missing' do
-      get "/api/v1/revenue?start="
+      get '/api/v1/revenue?start='
       expect(response).to_not be_successful
       expect(response.status).to be(400)
     end
@@ -104,7 +104,7 @@ describe 'Revenue API' do
   describe 'GET revenue/items' do
     before :each do
       merchant = create(:merchant)
-      items = create_list(:item, 5, merchant: merchant)
+      create_list(:item, 5, merchant: merchant)
       create_list(:invoice, 5, merchant: merchant, status: 'shipped')
       create(:invoice_item, item: Item.first, invoice: Invoice.first, quantity: 2, unit_price: 10.00)
       create(:invoice_item, item: Item.second, invoice: Invoice.second, quantity: 1, unit_price: 15.00)
@@ -116,7 +116,7 @@ describe 'Revenue API' do
       end
     end
     it 'can return quantity of items by revenue' do
-      get "/api/v1/revenue/items?quantity=3"
+      get '/api/v1/revenue/items?quantity=3'
 
       expect(response).to be_successful
       items = JSON.parse(response.body, symbolize_names: true)
@@ -130,7 +130,7 @@ describe 'Revenue API' do
       end
     end
     it 'returns error if params are not correct' do
-      get "/api/v1/revenue/items?quantity=kdj"
+      get '/api/v1/revenue/items?quantity=kdj'
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
@@ -152,7 +152,7 @@ describe 'Revenue API' do
       end
     end
     it 'returns potential revenue default quantity 10' do
-      get "/api/v1/revenue/unshipped"
+      get '/api/v1/revenue/unshipped'
 
       expect(response).to be_successful
       invoices = JSON.parse(response.body, symbolize_names: true)
@@ -164,7 +164,7 @@ describe 'Revenue API' do
       end
     end
     it 'returns potential revenue with quantity entered' do
-      get "/api/v1/revenue/unshipped?quantity=5"
+      get '/api/v1/revenue/unshipped?quantity=5'
 
       expect(response).to be_successful
       invoices = JSON.parse(response.body, symbolize_names: true)
@@ -176,12 +176,12 @@ describe 'Revenue API' do
       end
     end
     it 'returns error if params are entered incorrectly' do
-      get "/api/v1/revenue/unshipped?quantity="
+      get '/api/v1/revenue/unshipped?quantity='
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
 
-      get "/api/v1/revenue/unshipped?quantity=kdj"
+      get '/api/v1/revenue/unshipped?quantity=kdj'
 
       expect(response).to_not be_successful
       expect(response.status).to eq(400)
@@ -205,7 +205,7 @@ describe 'Revenue API' do
         create(:transaction, invoice: invoice)
       end
 
-      get "/api/v1/revenue/weekly"
+      get '/api/v1/revenue/weekly'
 
       expect(response).to be_successful
       invoices = JSON.parse(response.body, symbolize_names: true)

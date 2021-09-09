@@ -7,11 +7,13 @@ class Api::V1::RevenueController < ApplicationController
       render_bad_request('param not given')
     end
   end
+
   def revenue_merchant
     merchant = Merchant.find(params[:id])
     revenue = Merchant.total_revenue(merchant.id)
     render json: MerchantRevenueSerializer.new(revenue)
   end
+
   def revenue_date
     if params_exist(params[:start]) && params_exist(params[:end])
       params[:end] = params[:end].to_date.end_of_day.to_s
@@ -26,8 +28,9 @@ class Api::V1::RevenueController < ApplicationController
       render_bad_request('param not given')
     end
   end
+
   def quantity_items
-    quantity = params.fetch(:quantity,10).to_i
+    quantity = params.fetch(:quantity, 10).to_i
     if quantity != 0
       items = Item.quantity_by_revenue(quantity)
       render json: ItemRevenueSerializer.new(items)
@@ -35,8 +38,9 @@ class Api::V1::RevenueController < ApplicationController
       render_bad_request('param entered incorrectly')
     end
   end
+
   def unshipped
-    quantity = params.fetch(:quantity,10).to_i
+    quantity = params.fetch(:quantity, 10).to_i
     if quantity != 0
       invoices = Invoice.potential_revenue(quantity)
       render json: UnshippedOrderSerializer.new(invoices)
@@ -44,6 +48,7 @@ class Api::V1::RevenueController < ApplicationController
       render_bad_request('param entered incorrectly')
     end
   end
+
   def weekly
     id = nil
     revenue = Invoice.revenue_by_week

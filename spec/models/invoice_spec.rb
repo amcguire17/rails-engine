@@ -24,8 +24,8 @@ RSpec.describe Invoice do
         Invoice.all.each do |invoice|
           create(:transaction, invoice: invoice)
         end
-        start_date = "2021-09-02"
-        end_date = "2021-09-03"
+        start_date = '2021-09-02'
+        end_date = '2021-09-03'
         expect(Invoice.revenue_by_date(start_date, end_date)).to eq(75.00)
       end
     end
@@ -61,9 +61,9 @@ RSpec.describe Invoice do
           create(:transaction, invoice: invoice)
         end
 
-        expected = {Time.parse('2021-08-30 00:00:00.000000000 +0000')=>20.0,
-                    Time.parse('2021-09-06 00:00:00.000000000 +0000')=>15.0,
-                    Time.parse('2021-09-13 00:00:00.000000000 +0000')=>60.0}
+        expected = { Time.zone.parse('2021-08-30 00:00:00.000000000 +0000') => 20.0,
+                     Time.zone.parse('2021-09-06 00:00:00.000000000 +0000') => 15.0,
+                     Time.zone.parse('2021-09-13 00:00:00.000000000 +0000') => 60.0 }
         expect(Invoice.revenue_by_week).to eq(expected)
       end
     end

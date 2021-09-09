@@ -3,7 +3,7 @@ class RevenueDateSerializer
     {
       "data": {
         "id": id,
-        "type": "revenue",
+        "type": 'revenue',
         "attributes": {
           "revenue": revenue
         }

@@ -4,27 +4,32 @@ class ApplicationController < ActionController::API
   def render_not_found(exception)
     render json: { error: exception.message }, status: :not_found
   end
+
   def render_unprocessable(object)
     render json: { error: object.errors.full_messages }, status: :unprocessable_entity
   end
+
   def render_bad_request(message)
     render json: { error: message }, status: :bad_request
   end
+
   def render_validation(object)
     render json: { error: object.errors.full_messages }, status: :not_found
   end
 
   def get_page
-    if params[:page] == "0"
-      page = params[:page].to_i
+    if params[:page] == '0'
+      params[:page].to_i
     else
-      page = (params.fetch(:page,1).to_i) - 1
+      params.fetch(:page, 1).to_i - 1
     end
   end
+
   def get_per_page
-    per_page = params.fetch(:per_page,20).to_i
+    params.fetch(:per_page, 20).to_i
   end
+
   def params_exist(param)
-    !param.nil? && !param.empty?
+    param.present?
   end
 end

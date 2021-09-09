@@ -55,7 +55,7 @@ describe Merchant do
         invoices.each do |invoice|
           create(:transaction, invoice: invoice)
         end
-        
+
         expect(Merchant.total_revenue(merchant.id).revenue).to eq(95.00)
       end
     end

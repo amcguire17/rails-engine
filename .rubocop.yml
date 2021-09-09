@@ -1,0 +1,60 @@
+require: rubocop-rails
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'config/**/*'
+    - 'coverage/**/*'
+    - 'db/**/*'
+    - 'lib/**/*'
+    - 'log/**/*'
+    - 'node_modules/**/*'
+    - 'public/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - './*'
+    - 'Gemfile'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'app/controllers/application_controller.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/controllers/**/*.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/controllers/**/*.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/controllers/**/*.rb'
