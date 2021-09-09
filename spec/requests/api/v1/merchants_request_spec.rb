@@ -121,7 +121,7 @@ describe 'Merchants API' do
       expect(response).to be_successful
       merchant = JSON.parse(response.body, symbolize_names: true)
 
-      expect(merchant[:data]).to eq(nil)
+      expect(merchant[:data]).to eq({})
     end
     it 'returns error if params are incorrect' do
       merchant1 = create(:merchant, name: 'Walmart')

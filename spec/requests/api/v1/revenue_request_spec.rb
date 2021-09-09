@@ -82,14 +82,6 @@ describe 'Revenue API' do
       @end_date = "2021-09-03"
     end
     it 'can return total revenue for time range' do
-      get "/api/v1/revenue?start_date=#{@start_date}&end_date=#{@end_date}"
-      revenue = JSON.parse(response.body, symbolize_names: true)
-
-      expect(response).to be_successful
-      expect(revenue[:data][:attributes]).to have_key(:revenue)
-      expect(revenue[:data][:attributes][:revenue]).to be_a(Float)
-      expect(revenue[:data][:attributes][:revenue]).to eq(75)
-
       get "/api/v1/revenue?start=#{@start_date}&end=#{@end_date}"
       revenue = JSON.parse(response.body, symbolize_names: true)
 
@@ -99,16 +91,12 @@ describe 'Revenue API' do
       expect(revenue[:data][:attributes][:revenue]).to eq(75)
     end
     it 'returns an error if params are missing' do
-      get "/api/v1/revenue?start_date="
+      get "/api/v1/revenue?start="
       expect(response).to_not be_successful
       expect(response.status).to be(400)
     end
     it 'returns an error if end date is before start date' do
       get "/api/v1/revenue?start=#{@end_date}&end=#{@start_date}"
-      expect(response).to_not be_successful
-      expect(response.status).to be(400)
-
-      get "/api/v1/revenue?start_date=#{@end_date}&end_date=#{@start_date}"
       expect(response).to_not be_successful
       expect(response.status).to be(400)
     end
@@ -142,11 +130,6 @@ describe 'Revenue API' do
       end
     end
     it 'returns error if params are not correct' do
-      get "/api/v1/revenue/items"
-
-      expect(response).to_not be_successful
-      expect(response.status).to eq(400)
-
       get "/api/v1/revenue/items?quantity=kdj"
 
       expect(response).to_not be_successful

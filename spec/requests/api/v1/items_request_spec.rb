@@ -234,28 +234,28 @@ describe 'Items API' do
       expect(response).to be_successful
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(item[:data]).to eq(nil)
+      expect(item[:data]).to eq({})
 
       get "/api/v1/items/find?min_price=20"
 
       expect(response).to be_successful
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(item[:data]).to eq(nil)
+      expect(item[:data]).to eq({})
 
       get "/api/v1/items/find?max_price=2"
 
       expect(response).to be_successful
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(item[:data]).to eq(nil)
+      expect(item[:data]).to eq({})
 
       get "/api/v1/items/find?min_price=15&max_price=20"
 
       expect(response).to be_successful
       item = JSON.parse(response.body, symbolize_names: true)
 
-      expect(item[:data]).to eq(nil)
+      expect(item[:data]).to eq({})
     end
     it 'returns error if params are incorrect' do
       item1 = create(:item, name: 'Hand Sanitizer', unit_price: 5.00)
