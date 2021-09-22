@@ -25,6 +25,7 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#endpoints">Endpoints</a></li>
       </ul>
     </li>
     <li>
@@ -55,6 +56,39 @@ Learning Goals:
 * Write basic SQL statements without the assistance of an ORM
 
 This project was challenging but also enjoyable for me. I practiced project management and breaking down large problems into smaller steps.
+
+### Endpoints
+
+| route | description |
+|-------|-------------|
+| GET /api/v1/merchants | Get all merchants (default 20 per page) |
+| GET /api/v1/merchants?per_page=number&page=number | Get all merchants using pagination |
+| GET /api/v1/merchants/id | get one merchant by id |
+| GET /api/v1/merchants/id/items | get all items for one merchant by id |
+| GET /api/v1/merchants/find?name=text | get merchant by name |
+| GET /api/v1/merchants/find_all?name=text | get all merchants by name |
+| GET /api/v1/items | Get all items (default 20 per page) |
+| GET /api/v1/items?per_page=number&page=number | Get all items using pagination |
+| GET /api/v1/items/id | get one item by id |
+| POST /api/v1/items | create an item |
+| PATCH /api/v1/items/id | update an item |
+| DELETE /api/v1/items/id | delete an item |
+| GET /api/v1/items/id/merchant | get an item's merchant |
+| GET /api/v1/items/find?name=text | get item by name |
+| GET /api/v1/items/find?min_price=number | get item by minumum price |
+| GET /api/v1/items/find?max_price=number | get item by maximum price |
+| GET /api/v1/items/find?min_price=number&max_price=number | get item by price range |
+| GET /api/v1/items/find_all?name=text | get all items by name |
+| GET /api/v1/revenue/merchants?quantity=number | get x amount of merchants by most revenue |
+| GET /api/v1/merchants/most_items?quantity=number | get x amount of merchants by most items |
+| GET /api/v1/revenue?start=date&end=date | get revenue by date range |
+| GET /api/v1/revenue/merchants/id | get revenue for a merchant by id |
+| GET /api/v1/revenue/items | get top ten items by revenue |
+| GET /api/v1/revenue/items?quantity=number | get x amount of items by most revenue |
+| GET /api/v1/revenue/unshipped | get top ten invoices for unshipped revenue |
+| GET /api/v1/revenue/unshipped?quantity=number | get x amount of invoices for unshipped revenue |
+| GET /api/v1/revenue/weekly | get revenue by week |
+
 
 ### Built With
 
