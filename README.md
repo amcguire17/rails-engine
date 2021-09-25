@@ -127,7 +127,7 @@ This project requires Ruby 2.7.2.
     ruby 2.7.2p137 (2020-10-01 revision 5445e04352) [x86_64-darwin20]
     ```
 
-* [System dependencies](https://github.com/bfl3tch/little-esty-shop/blob/main/Gemfile)
+* [System dependencies](https://github.com/amcguire17/rails-engine/blob/main/Gemfile)
     ```bash
     $ rails -v
     Rails 5.2.6
